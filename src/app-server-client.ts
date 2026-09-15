@@ -122,6 +122,8 @@ export interface CodexAppServerClientOptions {
   capabilities?: Partial<InitializeCapabilities>;
   clientInfo?: ClientInfo;
   codexPath?: string;
+  /** Use app-server with an explicit standalone binary; defaults to the full CLI. */
+  codexExecutableType?: "cli" | "app-server";
   configOverrides?: readonly string[];
   cwd?: string;
   env?: NodeJS.ProcessEnv;
@@ -796,7 +798,8 @@ export class CodexAppServerClient {
     for (const override of this.options.configOverrides ?? []) {
       args.push("--config", override);
     }
-    args.push("app-server", "--listen", "stdio://", ...(this.options.appServerArgs ?? []));
+    if (this.options.codexExecutableType !== "app-server") args.push("app-server");
+    args.push("--listen", "stdio://", ...(this.options.appServerArgs ?? []));
 
     const child = spawn(resolved.executablePath, args, {
       cwd: this.options.cwd,
@@ -1019,6 +1022,16 @@ function validateInitializeResponse(value: unknown): InitializeResponse {
 
 function validateClientOptions(options: CodexAppServerClientOptions): void {
   if (
+    options.codexExecutableType !== undefined &&
+    options.codexExecutableType !== "cli" &&
+    options.codexExecutableType !== "app-server"
+  ) {
+    throw new TypeError("codexExecutableType must be cli or app-server.");
+  }
+  if (options.codexExecutableType === "app-server" && !options.codexPath) {
+    throw new TypeError("Standalone app-server requires an explicit codexPath.");
+  }
+  if (
     options.protocolValidation !== undefined &&
     options.protocolValidation !== "strict" &&
     options.protocolValidation !== "off"
@@ -1049,6 +1062,7 @@ function validateClientOptions(options: CodexAppServerClientOptions): void {
     const incompatible = [
       "appServerArgs",
       "codexPath",
+      "codexExecutableType",
       "configOverrides",
       "cwd",
       "env",
