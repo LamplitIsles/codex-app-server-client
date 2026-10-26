@@ -20,6 +20,9 @@
     "v2": {
       "ExternalAgentConfigImportHistoriesReadResponse": [
         "connectors"
+      ],
+      "ModelProviderCapabilitiesReadResponse": [
+        "namespaceTools"
       ]
     }
   },

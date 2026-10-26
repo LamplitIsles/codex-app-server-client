@@ -281,3 +281,8 @@ const client = new CodexAppServerClient({
   codexPath: "/absolute/path/to/codex",
 });
 ```
+
+For an explicit standalone app-server executable, also set `codexExecutableType: "app-server"`.
+The default `"cli"` mode inserts the `app-server` subcommand; standalone mode passes `--listen
+stdio://` directly. Standalone mode requires `codexPath`. These process-launch options apply only
+to managed stdio, and do not establish compatibility with another runtime version.

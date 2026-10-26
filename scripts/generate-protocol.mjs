@@ -63,6 +63,8 @@ const wireOptionalGeneratedFields = {
   "v2/ManagedHooksRequirements.ts": ["SessionEnd"],
   "v2/McpServerStatus.ts": ["toolsError"],
   "v2/Model.ts": ["modelSpecialty"],
+  // Present in 0.154.0, absent from the verified 0.164.0 wire response.
+  "v2/ModelProviderCapabilitiesReadResponse.ts": ["namespaceTools"],
   "v2/PluginDetail.ts": ["scheduledTasks"],
   "v2/PluginShareContext.ts": ["canPublishToWorkspace"],
   "v2/PluginShareSaveResponse.ts": ["canPublishToWorkspace"],
@@ -101,6 +103,7 @@ const compatibilityOptionalSchemaFields = {
   },
   v2: {
     ExternalAgentConfigImportHistoriesReadResponse: ["connectors"],
+    ModelProviderCapabilitiesReadResponse: ["namespaceTools"],
   },
 };
 const compatibilityArrayItemDefinitions = {

@@ -19,6 +19,7 @@ raw method coverage nor a successful basic smoke means all workflows work on an 
 | Official example workflows, groups 01–14 | Client `0.2.1`, bundled `0.154.0` | Real-runtime local-provider suite; [mapping and boundaries](./docs/official-examples.md), not model-quality acceptance |
 | Official login/account example, group 15 | Client `0.2.1` | Strict client + scripted RPC fixture; not real OAuth or successful sign-in |
 | ExternalMessage, group 16, and independent joined-turn consumers | Client `0.2.1`, bundled `0.154.0` | Real-runtime tool authority, restart/resume, active join, structured content and truncation; deterministic subscription races |
+| `modelProvider/capabilities/read` response shape | Captured native `0.164.0` response and historical `0.154.0` shape | Strict validator and fake-server regression; `namespaceTools` may be absent, both other booleans remain required; not full `0.164.0` support |
 | Packed ESM, declarations, schemas, and bundled binary | Node.js 18 on Linux, macOS, Windows | Installed-package CI; not every OS/architecture pairing |
 | Published `0.1.0-preview.0` archive without consumer build scripts | npm and pnpm 11 consumers | Historical exact-archive verification; not evidence for new candidate bytes |
 | Live account entitlement, model quality, every protocol workflow | Not established by these tests | Requires separate application-specific acceptance |
@@ -104,6 +105,12 @@ Unknown method names bypass known-method Schema validation and remain available 
 handlers and raw requests. This is intentional forward compatibility, not a claim that an unknown
 shape has been verified. `protocolValidation: "off"` is available for deliberate version-skew
 experiments.
+
+Provider-capabilities validation uses the existing generated compatibility override to accept
+responses without `namespaceTools`, while checking it as a boolean when present. Public types
+expose `namespaceTools?: boolean`; callers must handle absence. The raw CLI schemas remain at
+the pinned baseline, with effective runtime allowances recorded separately; see the exact
+[source provenance](./SOURCES.md). No capability value is fabricated.
 
 ## Cross-version verification
 

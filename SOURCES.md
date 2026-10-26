@@ -29,6 +29,20 @@ Schema. Unknown method names remain forward-compatible. The generator records th
 client responses for which the upstream CLI exports TypeScript but no JSON Schema, so that boundary
 cannot silently regress into a claim of complete runtime coverage.
 
+The provider-capabilities response has one targeted wire-version allowance. At
+[`0.154.0` commit `6b9826e3`](https://github.com/openai/codex/blob/6b9826e3aa83b1a5947db50f4332cb9c65f1b340/codex-rs/app-server-protocol/src/protocol/v2/model.rs),
+`ModelProviderCapabilitiesReadResponse` declares `namespace_tools`, `image_generation`, and
+`web_search` as required booleans. At
+[`0.164.0` commit `6aaac694`](https://github.com/openai/codex/blob/6aaac694803004a63c6f393d153c96d22521a6b9/codex-rs/app-server-protocol/src/protocol/v2/model.rs),
+it declares only the latter two, serialized with camelCase names. An isolated native `0.164.0`
+capture returned exactly `{"id":2,"result":{"imageGeneration":true,"webSearch":true}}`.
+The generator's existing optional-field maps therefore make `namespaceTools` optional in public
+TypeScript and effective runtime validation, retaining its boolean constraint when present.
+As with the existing compatibility allowances, raw per-method and aggregate CLI schemas retain
+the pinned upstream shape; `schemas/runtime-validation.schemas.json` records the override applied
+to the aggregate by the SDK validator. Both remaining booleans stay required. This verifies one
+response contract, not general `0.164.0` compatibility; the generator and method map stay pinned.
+
 The generated protocol bindings and Schema retain their OpenAI Codex attribution and Apache-2.0
 licensing through `THIRD_PARTY_NOTICES.md` and the bundled license copy under
 `THIRD_PARTY_LICENSES/`. The independent client implementation remains MIT-licensed.
